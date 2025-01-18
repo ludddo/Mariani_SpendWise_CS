@@ -36,5 +36,31 @@ namespace Mariani_SpendWise.Data
                 }
             }
         }
+
+        public static bool Authenticate(string email, string password)
+        {
+            string query = "SELECT * FROM users WHERE email = @Email AND password = @Password";
+
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+
+                try
+                {
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        return reader.Read(); // True se le credenziali sono corrette
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"Errore durante l'autenticazione: {ex.Message}");
+                    return false;
+                }
+            }
+        }
     }
 }
