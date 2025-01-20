@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mariani_SpendWise.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,6 +28,34 @@ namespace Mariani_SpendWise.Forms
             this.btnLogin.Left = (this.ClientSize.Width - this.btnLogin.Width) / 2;
             this.linkRegister.Left = (this.ClientSize.Width - this.linkRegister.Width) / 2;
 
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string email = txtEmail.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
+            // Validazione input
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Inserisci email e password.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Verifica credenziali
+            if (UserRepository.Authenticate(email, password))
+            {
+                MessageBox.Show("Accesso effettuato con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Apri la dashboard
+                DashboardForm dashboardForm = new DashboardForm();
+                dashboardForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Email o password errati.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void linkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
