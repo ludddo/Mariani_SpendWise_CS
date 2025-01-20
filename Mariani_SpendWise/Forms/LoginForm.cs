@@ -16,5 +16,10 @@ namespace Mariani_SpendWise.Forms
         {
             InitializeComponent();
         }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
