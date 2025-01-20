@@ -77,5 +77,12 @@ namespace Mariani_SpendWise.Forms
             loginForm.Show();
             this.Hide();
         }
+
+        private void linkLogin_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoginForm loginForm = new LoginForm();
+            loginForm.Show();
+            this.Hide();
+        }
     }
 }
