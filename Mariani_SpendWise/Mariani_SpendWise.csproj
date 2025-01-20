@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DatabaseHelper.cs" />
+    <Compile Include="Data\ExpenseRepository.cs" />
     <Compile Include="Data\UserRepository.cs" />
     <Compile Include="Forms\DashboardForm.cs">
       <SubType>Form</SubType>
