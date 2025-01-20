@@ -31,5 +31,31 @@ namespace Mariani_SpendWise.Data
                 return table;
             }
         }
+
+        public static bool AddExpense(DateTime date, string category, decimal amount, string description)
+        {
+            string query = "INSERT INTO expenses (date, category, amount, description) VALUES (@Date, @Category, @Amount, @Description)";
+
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Category", category);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@Description", description);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"Errore durante l'aggiunta della spesa: {ex.Message}");
+                    return false;
+                }
+            }
+        }
     }
 }
