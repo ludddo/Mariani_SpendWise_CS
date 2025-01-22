@@ -27,7 +27,6 @@ namespace Mariani_SpendWise.Forms
             this.txtPassword.Left = (this.ClientSize.Width - this.txtPassword.Width) / 2;
             this.btnLogin.Left = (this.ClientSize.Width - this.btnLogin.Width) / 2;
             this.linkRegister.Left = (this.ClientSize.Width - this.linkRegister.Width) / 2;
-
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

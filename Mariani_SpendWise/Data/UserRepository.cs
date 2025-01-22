@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using Mariani_SpendWise.Utils;
 
 namespace Mariani_SpendWise.Data
 {
@@ -39,20 +40,24 @@ namespace Mariani_SpendWise.Data
 
         public static bool Authenticate(string email, string password)
         {
-            string query = "SELECT * FROM users WHERE email = @Email AND password = @Password";
+            string query = "SELECT password FROM users WHERE email = @Email";
 
             using (var conn = DatabaseHelper.GetConnection())
             {
                 var cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@Password", password);
 
                 try
                 {
                     conn.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
-                        return reader.Read(); // True se le credenziali sono corrette
+                        if (reader.Read())
+                        {
+                            string hashedPassword = reader.GetString("password");
+                            return PasswordHelper.VerifyPassword(password, hashedPassword);
+                        }
+                        return false;
                     }
                 }
                 catch (MySqlException ex)

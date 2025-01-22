@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mariani_SpendWise.Forms;  
+using Mariani_SpendWise.Forms;
 using Mariani_SpendWise.Data;
 using Mariani_SpendWise.Utils;
 
@@ -72,13 +72,6 @@ namespace Mariani_SpendWise.Forms
         }
 
         private void linkLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            LoginForm loginForm = new LoginForm();
-            loginForm.Show();
-            this.Hide();
-        }
-
-        private void linkLogin_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             LoginForm loginForm = new LoginForm();
             loginForm.Show();
