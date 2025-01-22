@@ -42,12 +42,14 @@ namespace Mariani_SpendWise.Forms
             }
 
             // Verifica credenziali
-            if (UserRepository.Authenticate(email, password))
+            int userId = UserRepository.Authenticate(email, password);
+
+            if (userId != -1)
             {
                 MessageBox.Show("Accesso effettuato con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Apri la dashboard
-                DashboardForm dashboardForm = new DashboardForm();
+                // Apri la dashboard e passa l'userId
+                DashboardForm dashboardForm = new DashboardForm(userId);
                 dashboardForm.Show();
                 this.Hide();
             }

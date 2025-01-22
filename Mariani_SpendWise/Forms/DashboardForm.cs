@@ -13,9 +13,13 @@ namespace Mariani_SpendWise.Forms
 {
     public partial class DashboardForm : Form
     {
-        public DashboardForm()
+        private int userId;
+
+        public DashboardForm(int userId)
         {
             InitializeComponent();
+            this.userId = userId;
+            LoadDashboard();
         }
 
         private void DashboardForm_Load(object sender, EventArgs e)
@@ -26,10 +30,10 @@ namespace Mariani_SpendWise.Forms
         private void LoadDashboard()
         {
             // Riepilogo delle spese totali
-            lblTotalExpenses.Text = $"Totale Spese: {ExpenseRepository.GetTotalExpenses():C}";
+            lblTotalExpenses.Text = $"Totale Spese: {ExpenseRepository.GetTotalExpenses(userId):C}";
 
             // Caricamento spese recenti
-            dgvRecentExpenses.DataSource = ExpenseRepository.GetRecentExpenses();
+            dgvRecentExpenses.DataSource = ExpenseRepository.GetRecentExpenses(userId);
 
             // (Opzionale) Caricamento grafico
             LoadExpenseChart();
@@ -37,14 +41,14 @@ namespace Mariani_SpendWise.Forms
 
         private void btnAddExpense_Click(object sender, EventArgs e)
         {
-            AddExpenseForm addExpenseForm = new AddExpenseForm();
+            AddExpenseForm addExpenseForm = new AddExpenseForm(userId);
             addExpenseForm.ShowDialog();
             LoadDashboard(); // Ricarica il dashboard dopo aver aggiunto una spesa
         }
 
         private void btnManageCategories_Click(object sender, EventArgs e)
         {
-            ManageCategoriesForm manageCategoriesForm = new ManageCategoriesForm();
+            ManageCategoriesForm manageCategoriesForm = new ManageCategoriesForm(userId);
             manageCategoriesForm.ShowDialog();
         }
 

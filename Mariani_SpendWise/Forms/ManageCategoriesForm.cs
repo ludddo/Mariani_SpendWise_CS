@@ -8,36 +8,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mariani_SpendWise.Models;
 
 namespace Mariani_SpendWise.Forms
 {
     public partial class ManageCategoriesForm : Form
     {
-        public ManageCategoriesForm()
+        private int userId; // Assicurati di assegnare l'ID utente corrente
+
+        public ManageCategoriesForm(int userId)
         {
             InitializeComponent();
+            this.userId = userId;
             LoadCategories();
         }
 
         private void LoadCategories()
         {
-            // Carica le categorie dal database
-            List<string> categories = CategoryRepository.GetCategories();
-            lstCategories.Items.Clear();
-            lstCategories.Items.AddRange(categories.ToArray());
+            List<Category> categories = CategoryRepository.GetCategories(userId);
+            lstCategories.DataSource = categories;
+            lstCategories.DisplayMember = "Name";
+            lstCategories.ValueMember = "Id";
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            string category = txtCategory.Text.Trim();
+            string categoryName = txtCategory.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(category))
+            if (string.IsNullOrWhiteSpace(categoryName))
             {
                 MessageBox.Show("Il nome della categoria non può essere vuoto.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (CategoryRepository.AddCategory(category))
+            if (CategoryRepository.AddCategory(categoryName, userId))
             {
                 MessageBox.Show("Categoria aggiunta con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadCategories();
@@ -57,16 +61,16 @@ namespace Mariani_SpendWise.Forms
                 return;
             }
 
-            string oldCategory = lstCategories.SelectedItem.ToString();
-            string newCategory = txtCategory.Text.Trim();
+            int categoryId = (int)lstCategories.SelectedValue;
+            string newCategoryName = txtCategory.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(newCategory))
+            if (string.IsNullOrWhiteSpace(newCategoryName))
             {
                 MessageBox.Show("Il nome della categoria non può essere vuoto.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (CategoryRepository.UpdateCategory(oldCategory, newCategory))
+            if (CategoryRepository.UpdateCategory(categoryId, newCategoryName, userId))
             {
                 MessageBox.Show("Categoria modificata con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadCategories();
@@ -86,9 +90,9 @@ namespace Mariani_SpendWise.Forms
                 return;
             }
 
-            string category = lstCategories.SelectedItem.ToString();
+            int categoryId = (int)lstCategories.SelectedValue;
 
-            if (CategoryRepository.DeleteCategory(category))
+            if (CategoryRepository.DeleteCategory(categoryId, userId))
             {
                 MessageBox.Show("Categoria eliminata con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadCategories();

@@ -169,7 +169,7 @@
             this.Controls.Add(this.lblCategory);
             this.Name = "AddExpenseForm";
             this.Text = "Aggiungi Spesa";
-            this.Load += new System.EventHandler(this.AddExpenseForm_Load);
+            //this.Load += new System.EventHandler(this.AddExpenseForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

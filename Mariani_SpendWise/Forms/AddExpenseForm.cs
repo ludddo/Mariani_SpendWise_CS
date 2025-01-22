@@ -9,51 +9,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Mariani_SpendWise.Models;
 
 namespace Mariani_SpendWise.Forms
 {
     public partial class AddExpenseForm : Form
     {
-        public AddExpenseForm()
+        private int userId; // Assicurati di assegnare l'ID utente corrente
+
+        public AddExpenseForm(int userId)
         {
             InitializeComponent();
+            this.userId = userId;
             LoadCategories();
-        }
-
-        private void AddExpenseForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void LoadCategories()
         {
-            // Carica le categorie dal database
-            List<string> categories = CategoryRepository.GetCategories();
-            cmbCategory.Items.Clear();
-            cmbCategory.Items.AddRange(categories.ToArray());
+            List<Category> categories = CategoryRepository.GetCategories(userId);
+            cmbCategory.DataSource = categories;
+            cmbCategory.DisplayMember = "Name";
+            cmbCategory.ValueMember = "Id";
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // Validazione input
             if (cmbCategory.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtAmount.Text) || !decimal.TryParse(txtAmount.Text, out decimal amount))
             {
                 MessageBox.Show("Per favore compila tutti i campi correttamente.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Dati della nuova spesa
-            string category = cmbCategory.SelectedItem.ToString();
+            int categoryId = (int)cmbCategory.SelectedValue;
             DateTime date = dtpDate.Value;
             string description = txtDescription.Text;
 
-            // Salvataggio nel database
-            bool success = ExpenseRepository.AddExpense(date, category, amount, description);
+            bool success = ExpenseRepository.AddExpense(date, categoryId, amount, description, userId);
 
             if (success)
             {
                 MessageBox.Show("Spesa aggiunta con successo!", "Successo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close(); // Chiude il form dopo il salvataggio
+                this.Close();
             }
             else
             {

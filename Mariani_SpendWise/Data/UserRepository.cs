@@ -38,9 +38,9 @@ namespace Mariani_SpendWise.Data
             }
         }
 
-        public static bool Authenticate(string email, string password)
+        public static int Authenticate(string email, string password)
         {
-            string query = "SELECT password FROM users WHERE email = @Email";
+            string query = "SELECT id, password FROM users WHERE email = @Email";
 
             using (var conn = DatabaseHelper.GetConnection())
             {
@@ -54,16 +54,21 @@ namespace Mariani_SpendWise.Data
                     {
                         if (reader.Read())
                         {
+                            int userId = reader.GetInt32("id");
                             string hashedPassword = reader.GetString("password");
-                            return PasswordHelper.VerifyPassword(password, hashedPassword);
+
+                            if (PasswordHelper.VerifyPassword(password, hashedPassword))
+                            {
+                                return userId; // Autenticazione riuscita, ritorna l'userId
+                            }
                         }
-                        return false;
+                        return -1; // Autenticazione fallita
                     }
                 }
                 catch (MySqlException ex)
                 {
                     Console.WriteLine($"Errore durante l'autenticazione: {ex.Message}");
-                    return false;
+                    return -1;
                 }
             }
         }

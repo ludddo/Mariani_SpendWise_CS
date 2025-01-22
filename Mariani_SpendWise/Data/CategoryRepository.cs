@@ -2,39 +2,47 @@
 using System.Collections.Generic;
 using Mariani_SpendWise.Data;
 using MySql.Data.MySqlClient;
+using Mariani_SpendWise.Models;
 
 namespace Mariani_SpendWise.Data
 {
     public static class CategoryRepository
     {
-        public static List<string> GetCategories()
+        public static List<Category> GetCategories(int userId)
         {
-            string query = "SELECT name FROM categories";
-            var categories = new List<string>();
+            string query = "SELECT id, name FROM categories WHERE user_id = @UserId";
+            var categories = new List<Category>();
 
             using (var conn = DatabaseHelper.GetConnection())
             {
                 var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UserId", userId);
                 conn.Open();
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        categories.Add(reader.GetString(0));
+                        var category = new Category
+                        {
+                            Id = reader.GetInt32("id"),
+                            Name = reader.GetString("name")
+                        };
+                        categories.Add(category);
                     }
                 }
             }
             return categories;
         }
 
-        public static bool AddCategory(string category)
+        public static bool AddCategory(string category, int userId)
         {
-            string query = "INSERT INTO categories (name) VALUES (@Category)";
+            string query = "INSERT INTO categories (name, user_id) VALUES (@Category, @UserId)";
 
             using (var conn = DatabaseHelper.GetConnection())
             {
                 var cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Category", category);
+                cmd.Parameters.AddWithValue("@UserId", userId);
 
                 try
                 {
@@ -50,15 +58,16 @@ namespace Mariani_SpendWise.Data
             }
         }
 
-        public static bool UpdateCategory(string oldCategory, string newCategory)
+        public static bool UpdateCategory(int categoryId, string newCategoryName, int userId)
         {
-            string query = "UPDATE categories SET name = @NewCategory WHERE name = @OldCategory";
+            string query = "UPDATE categories SET name = @NewCategory WHERE id = @CategoryId AND user_id = @UserId";
 
             using (var conn = DatabaseHelper.GetConnection())
             {
                 var cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@OldCategory", oldCategory);
-                cmd.Parameters.AddWithValue("@NewCategory", newCategory);
+                cmd.Parameters.AddWithValue("@NewCategory", newCategoryName);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
 
                 try
                 {
@@ -74,14 +83,15 @@ namespace Mariani_SpendWise.Data
             }
         }
 
-        public static bool DeleteCategory(string category)
+        public static bool DeleteCategory(int categoryId, int userId)
         {
-            string query = "DELETE FROM categories WHERE name = @Category";
+            string query = "DELETE FROM categories WHERE id = @CategoryId AND user_id = @UserId";
 
             using (var conn = DatabaseHelper.GetConnection())
             {
                 var cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Category", category);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
 
                 try
                 {
