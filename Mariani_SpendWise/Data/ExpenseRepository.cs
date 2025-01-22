@@ -2,6 +2,7 @@
 using System.Data;
 using Mariani_SpendWise.Data;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 
 namespace Mariani_SpendWise.Data
 {
@@ -64,5 +65,41 @@ namespace Mariani_SpendWise.Data
                 }
             }
         }
+
+        public static List<ExpenseByCategory> GetExpensesByCategory(int userId)
+        {
+            string query = @"SELECT c.name AS Category, SUM(e.amount) AS Amount
+                             FROM expenses e
+                             JOIN categories c ON e.category_id = c.id
+                             WHERE e.user_id = @UserId
+                             GROUP BY c.name";
+
+            var expensesByCategory = new List<ExpenseByCategory>();
+
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                var cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        expensesByCategory.Add(new ExpenseByCategory
+                        {
+                            Category = reader.GetString("Category"),
+                            Amount = reader.GetDecimal("Amount")
+                        });
+                    }
+                }
+            }
+
+            return expensesByCategory;
+        }
+    }
+    public class ExpenseByCategory
+    {
+        public string Category { get; set; }
+        public decimal Amount { get; set; }
     }
 }

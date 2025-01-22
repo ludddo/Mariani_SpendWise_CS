@@ -28,12 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.lblTotalExpenses = new System.Windows.Forms.Label();
             this.dgvRecentExpenses = new System.Windows.Forms.DataGridView();
             this.btnAddExpense = new System.Windows.Forms.Button();
             this.btnManageCategories = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chartExpenses = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentExpenses)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExpenses)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTotalExpenses
@@ -86,15 +91,34 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 10);
+            this.panel1.Size = new System.Drawing.Size(1215, 10);
             this.panel1.TabIndex = 4;
+            // 
+            // chartExpenses
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartExpenses.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chartExpenses.Legends.Add(legend1);
+            this.chartExpenses.Location = new System.Drawing.Point(843, 77);
+            this.chartExpenses.Name = "chartExpenses";
+            this.chartExpenses.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartExpenses.Series.Add(series1);
+            this.chartExpenses.Size = new System.Drawing.Size(300, 300);
+            this.chartExpenses.TabIndex = 5;
+            this.chartExpenses.Text = "chartExpenses";
+            this.chartExpenses.Click += new System.EventHandler(this.chartExpenses_Click);
             // 
             // DashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 457);
+            this.ClientSize = new System.Drawing.Size(1215, 457);
+            this.Controls.Add(this.chartExpenses);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnManageCategories);
             this.Controls.Add(this.btnAddExpense);
@@ -104,6 +128,7 @@
             this.Text = "DashboardForm";
             this.Load += new System.EventHandler(this.DashboardForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentExpenses)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartExpenses)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,5 +141,6 @@
         private System.Windows.Forms.Button btnAddExpense;
         private System.Windows.Forms.Button btnManageCategories;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartExpenses;
     }
 }
