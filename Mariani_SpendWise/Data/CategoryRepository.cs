@@ -96,7 +96,5 @@ namespace Mariani_SpendWise.Data
                 }
             }
         }
-
-
     }
 }

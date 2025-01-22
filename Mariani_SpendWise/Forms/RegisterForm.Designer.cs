@@ -117,7 +117,7 @@
             this.linkLogin.TabIndex = 8;
             this.linkLogin.TabStop = true;
             this.linkLogin.Text = "Torna alla pagina di login";
-            this.linkLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLogin_LinkClicked_1);
+            this.linkLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLogin_LinkClicked);
             // 
             // panel1
             // 
